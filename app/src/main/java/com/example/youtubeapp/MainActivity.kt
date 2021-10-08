@@ -8,27 +8,31 @@ import android.net.NetworkInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+import kotlinx.coroutines.*
+import android.os.CountDownTimer
+
+
+
 
 class MainActivity : AppCompatActivity() {
 
     //Internet Connection Layout
     lateinit var llNoInternet: LinearLayout
-    lateinit var tvOops: TextView
     lateinit var ivRefresh: ImageView
 
     //Main
     lateinit var llMain: LinearLayout
+
+    //RecyclerView
     lateinit var rvMain: RecyclerView
     var videos = arrayListOf(
         YouTubeDetails("Lunch Box Cake", "YK86ZQK7aAw", "lunchcake"),
@@ -38,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         YouTubeDetails("Tom and Jerry Cheese Cake ", "Xw3GSefvY2Q", "tom_and_jerry_cheese _cake"),
         YouTubeDetails("Lemon Cake", "ybbUEfrpKuc", "lemon_cake"),
         YouTubeDetails("Green Tea Cream Cake", "yVo4zGeVinA", "green_tea_cream_cake"),
-        YouTubeDetails("Soft Roll Cake ", "W3k88_AA-yE","roll_cake")
+        YouTubeDetails("Soft Roll Cake ", "W3k88_AA-yE", "roll_cake")
     )
 
     //YouTube
@@ -51,22 +55,34 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         //Internet Connection Layout
         llNoInternet = findViewById(R.id.llNoInternet)
-        tvOops = findViewById(R.id.tvOops)
-        ivRefresh = findViewById(R.id.ivRefresh)
-        //Main
-        llMain = findViewById(R.id.llMain)
-        //RecyclerView
-        rvMain = findViewById(R.id.rvMain)
-
         ivRefresh = findViewById(R.id.ivRefresh)
         ivRefresh.setOnClickListener {
             checkInternetConnection()
         }
+        //Main
+        llMain = findViewById(R.id.llMain)
+        //RecyclerView
+        rvMain = findViewById(R.id.rvMain)
         //YouTube
         ytPlayerView = findViewById(R.id.ytPlayerView)
 
+        findViewById<LinearLayout>(R.id.llLogo).visibility = View.VISIBLE
+        llMain.visibility = View.GONE
+
+        object : CountDownTimer(3000, 1000) {
+            override fun onFinish() {
+                findViewById<LinearLayout>(R.id.llLogo).visibility = View.GONE
+                llMain.visibility = View.VISIBLE
+            }
+
+            override fun onTick(millisUntilFinished: Long) {
+                // millisUntilFinished    The amount of time until finished.
+            }
+        }.start()
         //CheckInternetConnectivity
         checkInternetConnection()
+
+
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -79,6 +95,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun initializeRV() {
+
         ytPlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
                 super.onReady(youTubePlayer)
@@ -87,31 +104,30 @@ class MainActivity : AppCompatActivity() {
                 //RecyclerView
                 rvMain.adapter = RecyclerViewAdapter(videos, ytPlayer, ytPlayerView)
                 rvMain.layoutManager = LinearLayoutManager(applicationContext)
-
             }
         })
 
-
     }
 
-    fun checkInternetConnection(): Boolean {
+    fun checkInternetConnection() {
         //Internet Connection Layout
         val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
         activeNetwork?.isConnectedOrConnecting
         //Check internet connection
         if (activeNetwork?.isConnectedOrConnecting == true) {
-            //do something with the network
-            llMain.visibility = View.VISIBLE
             llNoInternet.visibility = View.GONE
-            initializeRV()
-            return true
+            llMain.visibility = View.VISIBLE
+                initializeRV()
+
+
         } else {
-            llMain.visibility = View.GONE
             llNoInternet.visibility = View.VISIBLE
+            llMain.visibility = View.GONE
             println("Not Connected To The Internet")
-            return false
+
         }
     }
+
 
 }

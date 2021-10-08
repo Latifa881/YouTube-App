@@ -8,6 +8,31 @@
     tools:context=".MainActivity">
 
 
+    <LinearLayout
+        android:id="@+id/llLogo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:src="@drawable/cake" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="casual"
+            android:gravity="center"
+            android:text="Loading . . ."
+            android:textColor="@color/purple"
+            android:textSize="24dp" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/llNoInternet"
@@ -56,14 +81,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
+
         <androidx.cardview.widget.CardView
-            tools:style="@style/CardView"
-            android:orientation="vertical"
+            cardCornerRadius="7dp"
+            cardElevation="4dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            cardCornerRadius="7dp"
-            cardElevation="4dp">
+            android:orientation="vertical"
+            tools:style="@style/CardView">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -71,27 +97,28 @@
                 android:layout_margin="10dp"
                 android:background="@drawable/round_layout"
                 android:orientation="vertical">
+
                 <Button
-                    android:fontFamily="casual"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="15dp"
                     android:backgroundTint="@color/purple"
-                    android:textSize="26dp"
+                    android:fontFamily="casual"
                     android:text="Video Cake Recipes"
+                    android:textSize="26dp"
 
                     />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
+
         <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
             android:id="@+id/ytPlayerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
             app:autoPlay="false"
-            app:showFullScreenButton="true"
-          />
+            app:showFullScreenButton="true" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvMain"
