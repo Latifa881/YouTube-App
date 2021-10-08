@@ -26,19 +26,21 @@ class MainActivity : AppCompatActivity() {
     lateinit var llNoInternet: LinearLayout
     lateinit var tvOops: TextView
     lateinit var ivRefresh: ImageView
+
     //Main
     lateinit var llMain: LinearLayout
     lateinit var rvMain: RecyclerView
     var videos = arrayListOf(
-        YouTubeDetails("Lunch Box Cake", "YK86ZQK7aAw"),
-        YouTubeDetails("Chocolate Mousse Cake", "XZJEHpDnr_s"),
-        YouTubeDetails("Japanese Cheese Cake", "mRI-4boceN0"),
-        YouTubeDetails("Strawberry Chocolate Cake", "YlBVRmAtnJc"),
-        YouTubeDetails("Tom and Jerry Cheese Cake ", "Xw3GSefvY2Q"),
-        YouTubeDetails("Lemon Cake", "ybbUEfrpKuc"),
-        YouTubeDetails("Green Tea Cream Cake", "yVo4zGeVinA"),
-        YouTubeDetails("Soft Roll Cake ", "W3k88_AA-yE")
+        YouTubeDetails("Lunch Box Cake", "YK86ZQK7aAw", "lunchcake"),
+        YouTubeDetails("Chocolate Mousse Cake", "XZJEHpDnr_s", "chocolate_mousse_cake"),
+        YouTubeDetails("Japanese Cheese Cake", "mRI-4boceN0", "japanese_cheesecake"),
+        YouTubeDetails("Strawberry Chocolate Cake", "YlBVRmAtnJc", "strawberry_chocolate_cake"),
+        YouTubeDetails("Tom and Jerry Cheese Cake ", "Xw3GSefvY2Q", "tom_and_jerry_cheese _cake"),
+        YouTubeDetails("Lemon Cake", "ybbUEfrpKuc", "lemon_cake"),
+        YouTubeDetails("Green Tea Cream Cake", "yVo4zGeVinA", "green_tea_cream_cake"),
+        YouTubeDetails("Soft Roll Cake ", "W3k88_AA-yE","roll_cake")
     )
+
     //YouTube
     lateinit var ytPlayerView: YouTubePlayerView
     private lateinit var ytPlayer: YouTubePlayer
@@ -47,18 +49,16 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
         //Internet Connection Layout
-        llNoInternet=findViewById(R.id.llNoInternet)
+        llNoInternet = findViewById(R.id.llNoInternet)
         tvOops = findViewById(R.id.tvOops)
         ivRefresh = findViewById(R.id.ivRefresh)
         //Main
-        llMain=findViewById(R.id.llMain)
+        llMain = findViewById(R.id.llMain)
         //RecyclerView
         rvMain = findViewById(R.id.rvMain)
 
-        ivRefresh=findViewById(R.id.ivRefresh)
+        ivRefresh = findViewById(R.id.ivRefresh)
         ivRefresh.setOnClickListener {
             checkInternetConnection()
         }
@@ -66,8 +66,9 @@ class MainActivity : AppCompatActivity() {
         ytPlayerView = findViewById(R.id.ytPlayerView)
 
         //CheckInternetConnectivity
-      checkInternetConnection()
+        checkInternetConnection()
     }
+
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         if (newConfig.orientation === Configuration.ORIENTATION_LANDSCAPE) {
@@ -76,22 +77,24 @@ class MainActivity : AppCompatActivity() {
             ytPlayerView.exitFullScreen()
         }
     }
-    fun initializeRV(){
+
+    fun initializeRV() {
         ytPlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
                 super.onReady(youTubePlayer)
                 ytPlayer = youTubePlayer
                 ytPlayer.cueVideo(videos[0].ID, timeStamp)
                 //RecyclerView
-                rvMain.adapter = RecyclerViewAdapter(videos, ytPlayer,applicationContext)
+                rvMain.adapter = RecyclerViewAdapter(videos, ytPlayer, ytPlayerView)
                 rvMain.layoutManager = LinearLayoutManager(applicationContext)
-                //rvMain.adapter!!.notifyDataSetChanged()
+
             }
         })
 
 
     }
-    fun checkInternetConnection():Boolean {
+
+    fun checkInternetConnection(): Boolean {
         //Internet Connection Layout
         val cm = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
@@ -101,7 +104,7 @@ class MainActivity : AppCompatActivity() {
             //do something with the network
             llMain.visibility = View.VISIBLE
             llNoInternet.visibility = View.GONE
-             initializeRV()
+            initializeRV()
             return true
         } else {
             llMain.visibility = View.GONE
