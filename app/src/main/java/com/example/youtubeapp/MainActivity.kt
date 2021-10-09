@@ -2,16 +2,12 @@ package com.example.youtubeapp
 
 import android.content.Context
 import android.content.res.Configuration
-import android.graphics.Typeface
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import android.view.View
 import android.widget.*
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -47,6 +43,7 @@ class MainActivity : AppCompatActivity() {
     //YouTube
     lateinit var ytPlayerView: YouTubePlayerView
     private lateinit var ytPlayer: YouTubePlayer
+    private var currentVideo=0
     private var timeStamp = 0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,6 +89,19 @@ class MainActivity : AppCompatActivity() {
             ytPlayerView.exitFullScreen()
         }
     }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putInt("currentVideo", currentVideo)
+        outState.putFloat("timeStamp", timeStamp)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        currentVideo = savedInstanceState.getInt("currentVideo", 0)
+        timeStamp = savedInstanceState.getFloat("timeStamp", 0f)
+    }
 
     fun initializeRV() {
 
@@ -99,7 +109,7 @@ class MainActivity : AppCompatActivity() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
                 super.onReady(youTubePlayer)
                 ytPlayer = youTubePlayer
-                ytPlayer.cueVideo(videos[0].ID, timeStamp)
+                ytPlayer.cueVideo(videos[currentVideo].ID, timeStamp)
                 //RecyclerView
                 rvMain.adapter = RecyclerViewAdapter(videos, ytPlayer, ytPlayerView)
                 rvMain.layoutManager = LinearLayoutManager(applicationContext)

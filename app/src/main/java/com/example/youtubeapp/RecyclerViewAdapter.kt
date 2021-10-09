@@ -51,11 +51,9 @@ class RecyclerViewAdapter(
             }
 
             cvIcon.setImageResource(Icon)
-
             cvTitle.setOnClickListener {
                 ytPlayerView.visibility = View.VISIBLE
                 youTubePlayer.cueVideo(videoID, 0f)
-
             }
         }
 
